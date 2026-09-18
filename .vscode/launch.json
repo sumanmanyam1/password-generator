@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "PassGen (Interactive Menu)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/passgen/app.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/passgen",
+            "justMyCode": true
+        },
+        {
+            "name": "PassGen CLI (passgen.py)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/passgen/passgen.py",
+            "args": ["list"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/passgen",
+            "justMyCode": true
+        }
+    ]
+}
