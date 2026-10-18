@@ -1,14 +1,21 @@
 """
-simple_storage.py — Simple text file storage for passwords.
+storage.py — Simple text file storage for passwords.
 
 Stores passwords in a readable text file format without encryption.
 Format: Label | Password | Length | Created At
+
+The storage file lives in backend/data/passwords.txt.
 """
 
 import os
 from datetime import datetime
 
-STORAGE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "passwords.txt")
+# backend/core/storage.py -> backend/ -> backend/data/passwords.txt
+_BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_DATA_DIR = os.path.join(_BACKEND_DIR, "data")
+os.makedirs(_DATA_DIR, exist_ok=True)
+
+STORAGE_FILE = os.path.join(_DATA_DIR, "passwords.txt")
 SEPARATOR = " | "
 
 

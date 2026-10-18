@@ -1,0 +1,144 @@
+PASSWORD GENERATOR - KEY POINTS & USAGE GUIDE
+================================================
+
+The project now has two ways to use it:
+  1. Web app  — React frontend + Flask API (nice UI in the browser)
+  2. CLI      — the original command-line tool
+
+------------------------------------------------
+PART 1: WEB APP (recommended)
+------------------------------------------------
+
+Run it locally with two terminals, from the project root:
+/home/suman-manyam/passwordgenerator
+
+Terminal 1 - backend API:
+   ./run_backend.sh
+   -> http://127.0.0.1:5000
+
+Terminal 2 - frontend:
+   ./run_frontend.sh
+   -> http://127.0.0.1:5173   <- open this in your browser
+
+The frontend talks to the backend automatically (it proxies /api requests),
+so you only need to open the frontend URL.
+
+To stop the servers:
+   pkill -f "api/app.py" ; pkill -f vite
+
+------------------------------------------------
+PART 2: COMMAND-LINE TOOL (CLI)
+------------------------------------------------
+
+📁 BE IN THE RIGHT FOLDER
+----------------------------------------------
+Run CLI commands from the backend folder:
+   cd /home/suman-manyam/passwordgenerator/backend
+
+(First time only) set up the environment:
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+
+🔧 CORRECT COMMAND FORMAT
+-------------------------
+ALWAYS start with: python3 cli/passgen.py
+
+❌ WRONG: generate
+✅ CORRECT: python3 cli/passgen.py generate --label facebook
+
+📋 ESSENTIAL COMMANDS
+--------------------
+
+1. HELP - See all available commands
+   python3 cli/passgen.py --help
+
+2. GENERATE PASSWORD - Create and save a new password
+   python3 cli/passgen.py generate --label <name> --length <number>
+   Example: python3 cli/passgen.py generate --label gmail --length 16
+
+3. LIST ALL PASSWORDS - See all stored passwords
+   python3 cli/passgen.py list
+
+4. GET PASSWORD - Retrieve a specific password
+   python3 cli/passgen.py get <label>
+   Example: python3 cli/passgen.py get gmail
+
+5. DELETE PASSWORD - Remove a password
+   python3 cli/passgen.py delete <label>
+   Example: python3 cli/passgen.py delete gmail
+
+6. ANALYZE PASSWORD - Check password strength
+   python3 cli/passgen.py analyze --label <label>
+   Example: python3 cli/passgen.py analyze --label gmail
+
+7. BULK GENERATE - Create multiple passwords
+   python3 cli/passgen.py bulk --count 5 --save
+
+🔍 COMPLETE WORKFLOW EXAMPLE
+----------------------------
+# Step 1: Navigate to the backend folder
+cd /home/suman-manyam/passwordgenerator/backend
+
+# Step 2: Generate a password
+python3 cli/passgen.py generate --label facebook --length 16
+
+# Step 3: List all passwords
+python3 cli/passgen.py list
+
+# Step 4: Get the password
+python3 cli/passgen.py get facebook
+
+# Step 5: Check password strength
+python3 cli/passgen.py analyze --label facebook
+
+📄 WHERE ARE PASSWORDS STORED?
+------------------------------
+File location:
+   /home/suman-manyam/passwordgenerator/backend/data/passwords.txt
+
+Both the web app and the CLI read and write this same file.
+Format: Label | Password | Length | Created At
+
+🎯 TROUBLESHOOTING
+-----------------
+Error: "command not found"
+→ Use python3 cli/passgen.py before the command
+
+Error: "No such file or directory"
+→ Make sure you're in the backend folder
+
+Error: "ModuleNotFoundError"
+→ Activate the venv and install requirements:
+     source .venv/bin/activate
+     pip install -r requirements.txt
+
+Web app: header shows "API offline"
+→ The backend isn't running. Start it with ./run_backend.sh
+
+🔧 GENERATE COMMAND OPTIONS
+---------------------------
+--label: Name for the password (required)
+--length: Password length (default: 16)
+--no-symbols: Exclude symbols like []{}
+--no-digits: Exclude numbers 0-9
+--no-upper: Exclude uppercase letters
+
+Examples:
+python3 cli/passgen.py generate --label bank --length 20
+python3 cli/passgen.py generate --label email --length 12 --no-symbols
+
+💡 QUICK TIPS
+-------------
+• For the nicest experience, use the web app (Part 1)
+• Labels can be anything: gmail, facebook, bank, etc.
+• Longer passwords (16+ characters) are stronger
+• Passwords are stored in plain text for easy access (perms 600)
+• The web app and CLI share the same storage file
+
+🔄 TYPICAL DAILY USAGE (CLI)
+---------------------
+1. cd /home/suman-manyam/passwordgenerator/backend
+2. python3 cli/passgen.py generate --label newsite
+3. python3 cli/passgen.py list
+4. python3 cli/passgen.py get newsite

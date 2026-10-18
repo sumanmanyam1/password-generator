@@ -16,8 +16,13 @@ from datetime import datetime
 import csv
 import json
 import click
-from generator import generate_password
-from simple_storage import (
+
+# Make the backend/ directory importable so we can use the `core` package
+# regardless of where the script is launched from.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core.generator import generate_password
+from core.storage import (
     storage_exists,
     create_storage,
     add_entry,
@@ -29,7 +34,7 @@ from simple_storage import (
     get_all_entries_with_passwords,
     get_storage_file_path,
 )
-from strength_analyzer import analyze_password_strength, format_strength_analysis
+from core.strength_analyzer import analyze_password_strength, format_strength_analysis
 
 
 # ──────────────────────────────────────────────

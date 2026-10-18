@@ -1,0 +1,18 @@
+# Secrets — never commit real passwords
+backend/data/passwords.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+dist/
+*.log
+
+# Editor / OS
+.DS_Store

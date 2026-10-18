@@ -1,18 +1,21 @@
-# PassGen — Simple Password Generator CLI
+# PassGen — Command-Line Tool (CLI)
 
 A command-line tool to generate, store, and retrieve secure passwords locally.
-All passwords are saved in a **plain text file** on your machine for easy access.
+It uses the same Python engine (`backend/core/`) that powers the web app, and
+all passwords are saved in a plain text file on your machine.
+
+> For the web app (React frontend + Flask API), see the root `README.md`.
 
 ---
 
 ## Features
 
 - Generates cryptographically secure passwords using Python's `secrets` module
-- Every password guaranteed to contain: 1 uppercase, 1 digit, 1 special character, 1 symbol
-- Stores passwords in a local plain text file (`passwords.txt`)
+- Every password is guaranteed to contain: 1 uppercase, 1 digit, 1 special char
+- Stores passwords in a local plain text file (`backend/data/passwords.txt`)
 - Retrieve any stored password by label
 - Password strength analysis with detailed scoring
-- Bulk password generation
+- Bulk password generation and export (CSV / JSON / TXT)
 - Fully offline — no internet required
 
 ---
@@ -24,17 +27,18 @@ All passwords are saved in a **plain text file** on your machine for easy access
 
 ---
 
-## Installation
+## Setup
 
-1. Navigate to the project folder:
-   ```bash
-   cd "demo project 1/passgen"
-   ```
+From the project root:
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+All CLI commands below are run from the `backend/` directory.
 
 ---
 
@@ -42,9 +46,9 @@ All passwords are saved in a **plain text file** on your machine for easy access
 
 ### Generate a password (auto-saved to storage)
 ```bash
-python passgen.py generate --label github
-python passgen.py generate --label gmail --length 24
-python passgen.py generate --label netflix --length 20 --no-symbols
+python cli/passgen.py generate --label github
+python cli/passgen.py generate --label gmail --length 24
+python cli/passgen.py generate --label netflix --length 20 --no-symbols
 ```
 
 **Options:**
@@ -61,7 +65,7 @@ python passgen.py generate --label netflix --length 20 --no-symbols
 
 ### Retrieve a stored password
 ```bash
-python passgen.py get github
+python cli/passgen.py get github
 ```
 
 **Output:**
@@ -74,7 +78,7 @@ Show password strength analysis? [y/N]:
 
 ### List all stored labels
 ```bash
-python passgen.py list
+python cli/passgen.py list
 ```
 
 **Output:**
@@ -92,7 +96,7 @@ python passgen.py list
 
 ### Delete a stored entry
 ```bash
-python passgen.py delete github
+python cli/passgen.py delete github
 ```
 
 **Output:**
@@ -107,8 +111,8 @@ Delete password for 'github'? [y/N]: y
 
 ### Analyze password strength
 ```bash
-python passgen.py analyze --password mypassword
-python passgen.py analyze --label github
+python cli/passgen.py analyze --password mypassword
+python cli/passgen.py analyze --label github
 ```
 
 **Output:**
@@ -117,34 +121,40 @@ python passgen.py analyze --label github
 PASSWORD STRENGTH ANALYSIS
 ==================================================
 
-Password: ***********
-Length: 11 characters
-Score: 44/100
-Strength: Weak
+Password      : ***********
+Length        : 11 characters
+Score         : 44/100
+Strength      : Weak
 Estimated crack time: 2.1 years
 
 DETAILED ANALYSIS:
 --------------------
-  ⚠ Adequate length (8+ characters)
-  ⚠ Uses only 2 character types
-  ✓ High character uniqueness
+  ⚠ Adequate length — 12+ recommended
   ✗ Contains sequential numbers
-  ✗ This is a commonly used weak password
+  ✗ This is a very commonly used weak password
 ```
 
 ---
 
 ### Generate multiple passwords
 ```bash
-python passgen.py bulk --count 5 --save
-python passgen.py bulk --count 3 --length 20
+python cli/passgen.py bulk --count 5 --save
+python cli/passgen.py bulk --count 3 --length 20
+```
+
+---
+
+### Export the vault
+```bash
+python cli/passgen.py export --format csv
+python cli/passgen.py export --format json --include-passwords
 ```
 
 ---
 
 ## Storage File
 
-Passwords are stored in `passwords.txt` in the project folder.
+Passwords are stored in `backend/data/passwords.txt`.
 
 **Format:**
 ```
@@ -157,20 +167,25 @@ github | X7#kLmP2@qRvN!wZ | 16 | 2026-09-16 11:35:00
 gmail | Zy9$mNx3@wQ8rT2v | 24 | 2026-09-16 11:36:00
 ```
 
-The file is a plain text file that you can open with any text editor like Notepad.
+It is a plain text file you can open with any text editor.
 
 ---
 
 ## Project Structure
 
 ```
-passgen/
-├── passgen.py              # CLI entry point
-├── generator.py            # Password generation logic
-├── simple_storage.py       # Text file read/write operations
-├── strength_analyzer.py    # Password strength analysis
-├── requirements.txt        # Dependencies
-└── README.md              # This file
+backend/
+├── core/
+│   ├── generator.py          # Password generation logic
+│   ├── strength_analyzer.py  # Password strength analysis
+│   └── storage.py            # Text file read/write operations
+├── cli/
+│   └── passgen.py            # CLI entry point
+├── api/
+│   └── app.py                # Flask API (used by the web frontend)
+├── data/
+│   └── passwords.txt         # Stored passwords
+└── requirements.txt          # Dependencies
 ```
 
 ---
@@ -180,13 +195,13 @@ passgen/
 - Passwords generated using Python's `secrets` module (cryptographically secure)
 - Storage file is plain text for easy access
 - File permissions set to `600` (owner read/write only)
-- No encryption - passwords are readable in the text file
+- No encryption — passwords are readable in the text file
 
 ---
 
 ## Backup
 
-To back up your passwords, simply copy `passwords.txt` to a safe location.
+To back up your passwords, copy `backend/data/passwords.txt` to a safe location.
 The file is human-readable and can be opened with any text editor.
 
 ---
